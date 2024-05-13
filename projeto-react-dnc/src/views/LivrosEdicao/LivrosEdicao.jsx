@@ -3,16 +3,22 @@ import Header from '../../components/Header/Header'
 import "./index.scss"
 import SubmenuLivros from '../../components/SubmenuLivros/SubmenuLivros'
 import { useParams } from 'react-router-dom'
-import { LivrosService } from '../../api/LivrosService'
+import { LivrosService } from '../../api/LivrosService.js'
 
 const LivrosEdicao = () => {  
-  let {livroId} = useParams();
+  let {livros_id} = useParams();
 
-  const [livro, setLivro] = useState([])
+  const [livro, setLivro] = useState(null)
 
-  async function getLivro(){
-    const {data} = await LivrosService.getLivro(livroId);
-    setLivro(data)
+  async function getLivros() {
+    console.log("Chamando getLivros() com livroId:", livros_id);
+    const { data } = await LivrosService.getLivros(livros_id);
+    if (livro && data.id === livro.id) {
+      console.log("Livro já está carregado, não é necessário atualizar.");
+      return;
+    }
+    console.log("Atualizando livro com novos dados:", data);
+    setLivro(data);
   }
 
   async function editLivro(){
@@ -36,7 +42,7 @@ const LivrosEdicao = () => {
   }
 
   useEffect(() => {
-    getLivro()    
+    getLivros()    
   }, [])  
 
   return (

@@ -3,24 +3,24 @@ import axios from "axios";
 const BASE_URL = "http://localhost:3000"
 
 export class LivrosService{
-    static getLivros(){
-        return axios.get(BASE_URL+'/livros');
+    static getHome(){
+        return axios.get(BASE_URL+'/');
     }
 
-    static getLivro(id){
-        return axios.get(`${BASE_URL}/livros/${id}`);
+    static getLivros(){
+        return axios.get(`${BASE_URL}/livros`);
     }
 
     static createLivro(body){
-        return axios.post(`${BASE_URL}/livros`,body);
+        return axios.post(`${BASE_URL}/livros/cadastro`,body);
     }
 
     static updateLivro(id,body){
-        return axios.put(`${BASE_URL}/livros/${id}`,body);
+        return axios.put(`${BASE_URL}/update/${id}`,body);
     }
 
     static deleteLivro(id){
-        return axios.delete(`${BASE_URL}/livros/${id}`);
+        return axios.delete(`${BASE_URL}/delete/${id}`);
     }
     
 }
