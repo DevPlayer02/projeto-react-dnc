@@ -15,12 +15,12 @@ export class LivrosService{
         return axios.post(`${BASE_URL}/livros/cadastro`,body);
     }
 
-    static updateLivro(id,body){
-        return axios.put(`${BASE_URL}/update/${id}`,body);
+    static updateLivro(_id,body){
+        return axios.put(`${BASE_URL}/update/${_id}`,body);
     }
 
-    static deleteLivro(id){
-        return axios.delete(`${BASE_URL}/delete/${id}`);
+    static deleteLivro(_id){
+        return axios.delete(`${BASE_URL}/delete/${_id}`);
     }
     
 }

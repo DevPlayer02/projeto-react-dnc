@@ -49,26 +49,26 @@ mongoose.connect('mongodb+srv://contatogiovanicf:sz3UPZlsePytcrFR@cluster0.cafds
     });
     
     
-    app.delete("/delete/:id", async (req, res, next) => {
+    app.delete("/delete/:_id", async (req, res, next) => {
         try {
-            if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            if (!mongoose.Types.ObjectId.isValid(req.params._id)) {
                 return res.status(400).send("ID inválido");
             }
             
-            const livro = await Livro.findByIdAndDelete(req.params.id)
+            const livro = await Livro.findByIdAndDelete(req.params._id)
             return res.send(livro)
         } catch (error) {
             next(error);
         }
     });
 
-    app.put("/update/:id", async (req, res, next) => {
+    app.put("/update/:_id", async (req, res, next) => {
         try {
-            if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            if (!mongoose.Types.ObjectId.isValid(req.params._id)) {
                 return res.status(400).send("ID inválido");
             }
             
-            const livro = await Livro.findByIdAndUpdate(req.params.id, {
+            const livro = await Livro.findByIdAndUpdate(req.params._id, {
                 titulo: req.body.titulo,
                 numeroPaginas: req.body.numeroPaginas,
                 codigoISBN: req.body.codigoISBN,
