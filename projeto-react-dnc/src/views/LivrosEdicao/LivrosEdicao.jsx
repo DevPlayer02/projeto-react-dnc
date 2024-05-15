@@ -4,24 +4,24 @@ import { useParams } from 'react-router-dom';
 import { LivrosService } from '../../api/LivrosService.js';
 
 const LivrosEdicao = () => {
-  let { livros_id } = useParams();
+  let { livrosId } = useParams();
 
   const [livro, setLivro] = useState({});
 
   async function getLivros() {
-    const { data } = await LivrosService.getLivros(livros_id);
+    const { data } = await LivrosService.getLivros(livrosId);
     setLivro(data);
   }
 
   async function editLivro() {
     const body = {
-      id: Number(livro._id),
+      id: Number(livro.id),
       titulo: livro.titulo,
       num_paginas: Number(livro.num_paginas),
       isbn: livro.isbn,
       editora: livro.editora
     };
-    if (livro._id != undefined && livro._id != '' && livro.titulo != undefined && livro.titulo != '' && livro.num_paginas != undefined && livro.num_paginas != '' && livro.isbn != undefined && livro.isbn != '' && livro.editora != undefined && livro.editora != '') {
+    if (livro.id != undefined && livro.id != '' && livro.titulo != undefined && livro.titulo != '' && livro.num_paginas != undefined && livro.num_paginas != '' && livro.isbn != undefined && livro.isbn != '' && livro.editora != undefined && livro.editora != '') {
       await LivrosService.updateLivro(Number(livro._id), body)
         .then(({ data }) => {
           alert(data.mensagem);

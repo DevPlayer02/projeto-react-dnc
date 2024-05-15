@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
-const { v4: uuidv4 } = require('uuid');
 
 app.use(express.json());
 app.use(cors({
@@ -12,17 +11,13 @@ const port = 3000;
 
 
 const Livro = mongoose.model('Livro', {
-    _id: {
-        type: String,
-        default: uuidv4
-    },
     titulo: String,
     numeroPaginas: Number,
     codigoISBN: String,
     editora: String
 });
 
-mongoose.connect('mongodb+srv://contatogiovanicf:sz3UPZlsePytcrFR@cluster0.cafds35.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect('mongodb+srv://contatogiovanicf:bh4NrBS4sQ0BN2aD@cluster0.cafds35.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => {
         console.log('Connected to MongoDB');
         module.exports = app;
@@ -38,7 +33,6 @@ mongoose.connect('mongodb+srv://contatogiovanicf:sz3UPZlsePytcrFR@cluster0.cafds
         return res.send("Servidor rodando");
     });
     
-    
     app.get("/livros", async (req, res, next) => {
         try {
             const livros = await Livro.find()
@@ -46,17 +40,17 @@ mongoose.connect('mongodb+srv://contatogiovanicf:sz3UPZlsePytcrFR@cluster0.cafds
         } catch (error) {
             next(error);
         }
-    });
-    
+    });   
     
     app.delete("/delete/:_id", async (req, res, next) => {
         try {
-            if (!mongoose.Types.ObjectId.isValid(req.params._id)) {
-                return res.status(400).send("ID inválido");
+            const { _id } = req.params;    
+            const livro = await Livro.findByIdAndDelete(new mongoose.Types.ObjectId(_id));
+            if (livro) {
+                res.status(200).json({ mensagem: 'Livro deletado com sucesso!' });
+            } else {
+                return res.status(404).json({ message: 'Livro não encontrado' });
             }
-            
-            const livro = await Livro.findByIdAndDelete(req.params._id)
-            return res.send(livro)
         } catch (error) {
             next(error);
         }

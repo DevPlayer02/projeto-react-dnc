@@ -2,7 +2,6 @@ import { useState } from 'react';
 import "./index.scss"
 import Header from '../../components/Header/Header';
 import { LivrosService } from '../../api/LivrosService.js';
-import { v4 as uuidv4 } from 'uuid';
 
 
 const LivrosCadastro = () => {
@@ -17,9 +16,7 @@ const LivrosCadastro = () => {
   async function createLivro(event) {
     event.preventDefault();
     try {
-      const id = uuidv4(); 
       const body = {
-        id,
         titulo: livro.titulo,
         num_paginas: Number(livro.num_paginas),
         isbn: livro.isbn,
