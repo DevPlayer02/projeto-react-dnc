@@ -45,7 +45,7 @@ mongoose.connect('mongodb+srv://contatogiovanicf:bh4NrBS4sQ0BN2aD@cluster0.cafds
     app.delete("/delete/:_id", async (req, res, next) => {
         try {
             const { _id } = req.params;    
-            const livro = await Livro.findByIdAndDelete(new mongoose.Types.ObjectId(_id));
+            const livro = await Livro.findByIdAndDelete(_id);
             if (livro) {
                 res.status(200).json({ mensagem: 'Livro deletado com sucesso!' });
             } else {
@@ -56,26 +56,20 @@ mongoose.connect('mongodb+srv://contatogiovanicf:bh4NrBS4sQ0BN2aD@cluster0.cafds
         }
     });
 
-    app.put("/update/:_id", async (req, res, next) => {
+    app.put('/livros/edicao/:_id', async (req, res, next) => {
         try {
-            if (!mongoose.Types.ObjectId.isValid(req.params._id)) {
-                return res.status(400).send("ID inválido");
+            const { _id } = req.params;
+            const livro = req.body;
+            const livroAtualizado = await Livro.findByIdAndUpdate(_id, livro, { new: true });
+            if (livroAtualizado) {
+                res.status(200).json({ mensagem: 'Livro editado com sucesso!' });
+            } else {
+                res.status(404).json({ mensagem: 'Livro não encontrado' });
             }
-            
-            const livro = await Livro.findByIdAndUpdate(req.params._id, {
-                titulo: req.body.titulo,
-                numeroPaginas: req.body.numeroPaginas,
-                codigoISBN: req.body.codigoISBN,
-                editora: req.body.editora
-            }, {
-                new: true
-            })
-        
-            return res.send(livro)
         } catch (error) {
             next(error);
         }
-    })
+    });
     
     app.post("/livros/cadastro", async (req, res, next) => {
         try {
@@ -85,7 +79,6 @@ mongoose.connect('mongodb+srv://contatogiovanicf:bh4NrBS4sQ0BN2aD@cluster0.cafds
                 codigoISBN: req.body.codigoISBN,
                 editora: req.body.editora
             })
-        
             await livro.save();
             return res.send(livro);
         } catch (error) {
