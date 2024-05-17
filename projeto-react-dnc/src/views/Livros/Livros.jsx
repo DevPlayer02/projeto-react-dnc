@@ -14,10 +14,10 @@ const Livros = () => {
     setLivros(data)
   }
 
-  async function deleteLivro(_id){
+  async function deleteLivro(id){
     let valida = confirm(`Você realmente deseja remover esse livro ?`);
     if(valida){
-      await LivrosService.deleteLivro(_id)
+      await LivrosService.deleteLivro(id)
       .then(({data}) => {
         alert(data.mensagem)
         getLivros()

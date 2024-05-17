@@ -1,25 +1,37 @@
 import { useEffect, useState } from 'react';
 import Header from '../../components/Header/Header';
 import { LivrosService } from '../../api/LivrosService.js';
+import { useParams } from 'react-router-dom';
 
 const LivrosEdicao = () => {
+  const { _id } = useParams();
 
   const [livro, setLivro] = useState({
+    _id: '',
     titulo: '',
     num_paginas: '',
     isbn: '',
     editora: ''
   });
 
-  async function getLivros(_id){
-    const {data} = await LivrosService.getLivros(_id);
-    setLivro(data)
+  useEffect(() => {
+    if (_id) {
+      getLivro(_id);
+    }
+  }, [_id]);
+
+  async function getLivro(_id) {
+    try {
+      const { data } = await LivrosService.getLivros(_id);
+      setLivro(data);
+    } catch (error) {
+      alert('Erro ao carregar os dados do livro.');
+    }
   }
 
   async function editLivro(event) {
     event.preventDefault();
-  
-    if (livro._id && livro.titulo && livro.num_paginas && livro.isbn && livro.editora) {
+    if (livro.titulo && livro.num_paginas && livro.isbn && livro.editora) {
       const body = {
         titulo: livro.titulo,
         num_paginas: Number(livro.num_paginas),
@@ -27,20 +39,20 @@ const LivrosEdicao = () => {
         editora: livro.editora
       };
       try {
-        await LivrosService.updateLivro(livro._id, body); // Corrigido para usar livro._id
+        await LivrosService.updateLivro(livro._id, body);
         alert("Livro atualizado com sucesso.");
       } catch (error) {
-        const { response: { data, status } } = error;
-        alert(`${status} - ${data.mensagem}`);
+        if (error.response) {
+          const { data, status } = error.response;
+          alert(`${status} - ${data.mensagem}`);
+        } else {
+          alert('Erro ao atualizar o livro.');
+        }
       }
     } else {
       alert("Por favor, preencha todos os campos.");
     }
   }
-
-  useEffect(() => {
-    getLivros(livro._id);
-  }, []);
 
   return (
     <>

@@ -32,7 +32,7 @@ mongoose.connect('mongodb+srv://contatogiovanicf:bh4NrBS4sQ0BN2aD@cluster0.cafds
     app.get("/", async (req, res) => {
         return res.send("Servidor rodando");
     });
-    
+
     app.get("/livros", async (req, res, next) => {
         try {
             const livros = await Livro.find()
@@ -40,11 +40,11 @@ mongoose.connect('mongodb+srv://contatogiovanicf:bh4NrBS4sQ0BN2aD@cluster0.cafds
         } catch (error) {
             next(error);
         }
-    });   
-    
+    });
+
     app.delete("/delete/:_id", async (req, res, next) => {
         try {
-            const { _id } = req.params;    
+            const { _id } = req.params;
             const livro = await Livro.findByIdAndDelete(_id);
             if (livro) {
                 res.status(200).json({ mensagem: 'Livro deletado com sucesso!' });
@@ -56,21 +56,21 @@ mongoose.connect('mongodb+srv://contatogiovanicf:bh4NrBS4sQ0BN2aD@cluster0.cafds
         }
     });
 
-    app.put('/livros/edicao/:_id', async (req, res, next) => {
+    app.put('/livros/:_id', async (req, res, next) => {
+        const { _id } = req.params;
+        const { titulo, num_paginas, isbn, editora } = req.body;
+        
         try {
-            const { _id } = req.params;
-            const livro = req.body;
-            const livroAtualizado = await Livro.findByIdAndUpdate(_id, livro, { new: true });
-            if (livroAtualizado) {
-                res.status(200).json({ mensagem: 'Livro editado com sucesso!' });
-            } else {
-                res.status(404).json({ mensagem: 'Livro não encontrado' });
+            const livro = await Livro.findByIdAndUpdate(_id, { titulo, num_paginas, isbn, editora }, { new: true });
+            if (!livro) {
+            return res.status(404).send({ mensagem: 'Livro não encontrado' });
             }
+            res.send(livro);
         } catch (error) {
             next(error);
         }
     });
-    
+
     app.post("/livros/cadastro", async (req, res, next) => {
         try {
             const livro = new Livro({
